@@ -1,0 +1,8 @@
+# Herramientas para cálculo de alto rendimiento (Álgebra Lineal)
+numpy
+scipy
+# Herramientas para IA (Modelos básicos, Perceptrón)
+scikit-learn
+# Protocolo de comunicación (Microservicios)
+grpcio
+grpcio-tools

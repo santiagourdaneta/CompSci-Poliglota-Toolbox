@@ -1,0 +1,185 @@
+/* ==========================================================================
+   Variables CSS (Personalización)
+   ========================================================================== */
+   :root {
+       --primary-color: #6a11cb; 
+       --secondary-color: #2575fc; 
+       --accent-color: #ffb703; 
+       --text-color: #2c3e50; /* Texto oscuro y legible */
+       --background-light: #ecf0f1; /* Fondo suave */
+       --background-dark: #1a1a2e; 
+       --border-radius-size: 10px; /* Bordes suaves */
+       --box-shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.1);
+       --box-shadow-card: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra pronunciada para la tarjeta de resultados */
+       --font-family-body: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+       --font-family-heading: 'Poppins', sans-serif; 
+   }
+
+/* ==========================================================================
+   Configuración Global y Reset Básico
+   ========================================================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px; /* Base para 'rem' */
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family-body);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ocupa al menos el alto total de la ventana */
+}
+
+
+/* ==========================================================================
+   Encabezados
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-heading);
+    color: var(--primary-color);
+    margin-bottom: 0.8em;
+    font-weight: 600;
+}
+
+h1 { font-size: 2.5rem; } /* Más grande en móviles, escalará */
+h2 { 
+font-size: 2rem; 
+color: var(--secondary-color);
+border-bottom: 2px solid var(--secondary-color);
+padding-bottom: 0.3em;
+margin-bottom: 1.2em;
+}
+h3 { font-size: 1.75rem; }
+
+/* ==========================================================================
+   Layout Principal (Contenedor adaptable)
+   ========================================================================== */
+.container {
+    width: 90%; /* Ancho base para móviles */
+    max-width: 1200px; /* Máximo ancho en pantallas grandes */
+    margin: 2rem auto; /* Centrar y espacio vertical */
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: var(--border-radius-size);
+    box-shadow: var(--box-shadow-light);
+    flex-grow: 1; /* Permite que el contenedor ocupe el espacio disponible */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espacio entre elementos hijos */
+}
+
+/* ==========================================================================
+   Interfaz de Resultados (La tarjeta principal)
+   ========================================================================== */
+.results-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f7f7f7 100%); /* Degradado suave */
+    padding: 2.5rem;
+    border-radius: var(--border-radius-size);
+    box-shadow: var(--box-shadow-card); /* Sombra destacada */
+    border: 1px solid #ddd;
+    margin-top: 2rem;
+    animation: fadeIn 1s ease-in-out; /* Animación sutil al cargar */
+}
+
+.results-card h2 {
+    color: var(--primary-color);
+    border-bottom: none;
+}
+
+.results-card .card-description {
+    font-style: italic;
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+}
+
+/* Bloque de código PRE */
+.code-output {
+    background-color: var(--background-dark); /* Fondo oscuro para contraste de código */
+    color: #00ffaa; /* Texto verde neón para resultados de código/terminal */
+    padding: 1.5rem;
+    border-radius: var(--border-radius-size);
+    font-size: 1rem;
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.3); /* Resplandor sutil */
+    border: none;
+}
+
+/* Estilo para las secciones de explicación */
+.explanation-section h2 {
+    color: var(--primary-color);
+    border-bottom: 2px dashed var(--accent-color); /* Separador punteado */
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+/* Animación sutil */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Elementos de la Aplicación
+   ========================================================================== */
+p {
+    margin-bottom: 1em;
+}
+
+pre {
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: var(--border-radius-size);
+    overflow-x: auto; /* Para texto largo */
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    white-space: pre-wrap; /* Envuelve el texto */
+    word-break: break-word; /* Rompe palabras largas */
+}
+
+img {
+    max-width: 100%; /* Imágenes responsivas */
+    height: auto;
+    display: block; /* Elimina espacio extra debajo de la imagen */
+    border-radius: var(--border-radius-size);
+    margin: 1.5rem 0;
+    box-shadow: var(--box-shadow-light);
+    width: 100%;  /* Asegura que ocupe el ancho completo de su contenedor */
+    object-fit: cover; 
+    height: 300px;
+}
+
+/* ==========================================================================
+   Pie de página (Footer)
+   ========================================================================== */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 0.9rem;
+    border-top-left-radius: var(--border-radius-size);
+    border-top-right-radius: var(--border-radius-size);
+    box-shadow: var(--box-shadow-light);
+}
+
+/* ==========================================================================
+   Media Queries (Adaptabilidad)
+   ========================================================================== */
+@media (min-width: 768px) {
+    h1 { font-size: 3.5rem; }
+    h2 { font-size: 2.5rem; }
+    .container {
+        padding: 2.5rem;
+        margin: 4rem auto;
+    }
+}

@@ -1,0 +1,40 @@
+# Archivos específicos de Ruby/Bundler
+.bundle
+vendor/bundle
+log/*
+tmp/*
+*.gem
+*.rdoc
+.byebug_history
+.DS_Store
+
+# Archivos compilados de C++ (FFI)
+*.o
+*.so
+*.dll
+*.obj
+
+# Entornos Virtuales de Python
+.venv/
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Binarios de Go (GoLang)
+/bin/
+*.exe
+*.test
+*.prof
+
+# Archivos de logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos temporales o de configuración local
+.vscode/
+.idea/
+.env
+.local/

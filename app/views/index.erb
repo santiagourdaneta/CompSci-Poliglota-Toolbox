@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title><%= @title %></title>
+    
+    <link rel="preload" href="/assets/hero_image.jpg" as="image" fetchpriority="high">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet" fetchpriority="high">
+    
+    <link rel="stylesheet" href="/assets/style.css">
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>CompSci Poliglota: Arquitectura de Alto Rendimiento</h1>
+
+        <p class="intro-description">El orquestador Ruby integra servicios de código nativo (C++) y cálculo científico (Python) para ejecutar operaciones complejas con la máxima eficiencia.</p>
+        
+        <img src="/assets/hero_image.jpg" alt="Gráfico de datos complejos ilustrando procesamiento de datos." fetchpriority="high">
+
+        <div class="results-card">
+            <h2>📊 Resultados de la Orquestación</h2>
+            <p class="card-description">Salida consolidada del sistema políglota (Ruby, C++ FFI y Python IPC).</p>
+            <pre class="code-output"><%= @data_result %></pre>
+        </div>
+
+        <hr style="width: 100%; margin: 2rem 0; border: 0; border-top: 1px solid #ccc;">
+
+        <section class="explanation-section">
+            <h2>1. ⚛️ Ruby y C++: Integración de Bajo Nivel (FFI)</h2>
+            <p>
+                La integración entre Ruby y C++ se logra utilizando FFI (Foreign Function Interface). Ruby actúa como el orquestador de la aplicación web (gracias a Sinatra) y delega tareas que requieren alto rendimiento computacional, como algoritmos de ordenamiento o procesamiento intensivo, al código nativo de C++.
+            </p>
+            <p>
+                <strong>¿Cómo funciona?</strong> La librería FFI le permite a Ruby cargar la librería compilada de C++ (por ejemplo, un archivo <code>.dll</code> en Windows o <code>.so</code> en Linux). En lugar de escribir una extensión completa de Ruby en C, FFI simplemente declara qué funciones existen en la librería de C++ (ej: <code>fast_sort</code>) y le dice a Ruby cómo llamar a esa función (qué datos debe pasar y qué tipo de dato debe esperar de vuelta). El resultado es una ejecución a la velocidad de C++ sin sacrificar la comodidad y la productividad de Ruby en el nivel superior de la aplicación.
+            </p>
+        </section>
+
+        <hr style="width: 100%; margin: 2rem 0; border: 0; border-top: 1px solid #ccc;">
+
+        <section class="explanation-section">
+            <h2>2. 🧪 Ruby y Python: Hibridez y Servicios Matemáticos</h2>
+            <p>
+                Para tareas que requieren librerías científicas especializadas (como NumPy o SciPy en Python), se emplea un enfoque de Comunicación Inter-Proceso (IPC). Aquí, Ruby también actúa como orquestador, pero en lugar de usar FFI, le pide al sistema operativo (mediante un comando de <em>shell</em>) que ejecute un script de Python.
+            </p>
+            <p>
+                <strong>El flujo híbrido:</strong>
+                <ol>
+                    <li>Ruby serializa los datos (la matriz) en una cadena.</li>
+                    <li>Ruby ejecuta un comando que invoca al intérprete de Python, pasándole esa cadena como argumento.</li>
+                    <li>Python deserializa la cadena, usa la librería de cálculo (NumPy) para encontrar los Eigenvalores.</li>
+                    <li>Python imprime el resultado final en la <strong>Salida Estándar (stdout)</strong> con una etiqueta (<code>SUCCESS:</code>).</li>
+                    <li>Ruby captura la salida de stdout, valida la etiqueta y deserializa el resultado para integrarlo en la página web.</li>
+                </ol>
+                Este patrón crea una aplicación híbrida que aprovecha la rapidez del desarrollo web de Ruby junto con la potencia matemática de Python, manteniéndolos en procesos separados y comunicados. 
+            </p>
+        </section>
+        
+        <p>Esta es la prueba de la integración de diferentes lenguajes: Ruby como orquestador, C++ para algoritmos de ordenamiento de alto rendimiento y Python para cálculos matemáticos complejos como los Eigenvalores.</p>
+    </div>
+
+    <footer>
+        <p>© 2025 CompSci Toolbox. Todos los derechos reservados.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM cargado, la aplicación está lista.');
+        });
+    </script>
+</body>
+</html>
