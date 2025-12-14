@@ -34,13 +34,15 @@ def calculate_eigenvalues(data_string):
 
         # 3. Formatear y devolver el resultado
         
-        # La salida debe ser serializable y limpia. 
-        # Convertimos a una lista simple de complejos o flotantes para que Ruby pueda hacer 'eval'
+       # Convertimos la salida de NumPy a una lista de Python que incluye objetos complejos
         eigenvalues_list = eigenvalues.tolist()
         
-        # Imprimir SOLO el resultado final etiquetado a stdout
-        # La etiqueta "SUCCESS:" es vital para la validación del wrapper de Ruby (math_calculator.rb)
-        print(f"SUCCESS:{eigenvalues_list}") 
+        # === Serializar el resultado a JSON ===
+        # json.dumps convierte la lista de Python en una cadena JSON
+        json_output = json.dumps(eigenvalues_list)
+        
+        # Imprimir SOLO el resultado JSON etiquetado
+        print(f"SUCCESS:{json_output}")
         
         sys.stderr.write("Python Service: Cálculo exitoso y resultado enviado.\n") 
 

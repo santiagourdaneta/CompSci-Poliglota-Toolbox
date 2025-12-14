@@ -1,4 +1,5 @@
 # lib/math_calculator.rb
+require 'json'
 module CompSciToolbox
   module Math
     class Calculator
@@ -27,7 +28,8 @@ module CompSciToolbox
 
         if output.start_with?("SUCCESS:")
           result_str = output.sub("SUCCESS:", "")
-          return eval(result_str) 
+          # Esto interpreta la cadena JSON de forma segura.
+          return JSON.parse(result_str)
         else
           # Usamos la variable 'command' que es conocida en todo el método
           raise "Error en el servicio Python.\nComando ejecutado: #{command}\nSalida del shell (stdout/stderr): #{output}"

@@ -15,9 +15,30 @@ module CompSciToolbox
         
         # El método call es requerido para middleware de Rack/Sinatra
         def call(env)
-          # 1. Obtener la IP del cliente 
-          client_ip = env['REMOTE_ADDR'] || '127.0.0.1' 
-          current_time = Time.now.to_i # Tiempo actual en segundos
+          # 1. Obtener la IP del cliente de forma segura.
+                # Priorizar X-Forwarded-For (XFF) si estamos detrás de un proxy/load balancer.
+                # Si no existe XFF, usar REMOTE_ADDR (IP del último nodo que tocó el servidor).
+                
+                # Obtener IP del encabezado X-Forwarded-For si existe, 
+                # tomando la primera IP de la lista (que es la del cliente original).
+                if env['HTTP_X_FORWARDED_FOR']
+                  client_ip = env['HTTP_X_FORWARDED_FOR'].split(',').first.strip
+                else
+                  # Usar REMOTE_ADDR como fallback directo si no hay proxy
+                  client_ip = env['REMOTE_ADDR']
+                end
+                
+                # Manejo de error: si la IP sigue siendo nil o está vacía, debemos abortar o registrar.
+                if client_ip.nil? || client_ip.empty?
+                  # Si la IP es indeterminada, en lugar de usar '127.0.0.1', 
+                  # devolvemos un error 400 o un log, ya que el Rate Limiter no puede funcionar.
+                  # Para fines de demostración, permitiremos el acceso pero con una advertencia en el log.
+                  # En producción, esto debería ser un error 500 o 403.
+                  puts "[WARNING] No se pudo determinar la IP del cliente para Rate Limiting." 
+                  client_ip = 'unknown_ip_fallback' # Mejor usar un string que represente el error
+                end
+                
+                current_time = Time.now.to_i # Tiempo actual en segundos
 
           # 2. Limpiar entradas antiguas (Contador Fijo)
           # Esto evita que la memoria se llene.
