@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Carga las dependencias del entorno
 require 'bundler/setup'
 
