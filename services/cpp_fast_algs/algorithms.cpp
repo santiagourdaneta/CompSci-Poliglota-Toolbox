@@ -17,9 +17,15 @@ extern "C" int *fast_sort(int *data, int size) {
     }
 
     // 1. Asignar memoria para el array de resultados.
-    // Usamos 'new' en C++ o 'malloc' en C para asignación de memoria dinámica.
-    // El resultado debe ser liberado por el llamador (Ruby FFI).
-    int *result = (int *)malloc(sizeof(int) * size);
+            // Usamos calloc(count, size) para prevenir integer overflow
+            // y para inicializar la memoria a cero.
+            int *result = (int *)calloc(size, sizeof(int)); 
+
+            // Verificación de si la asignación de memoria falló (buena práctica)
+            if (result == NULL) {
+                // En caso de fallo de asignación, devolver NULL.
+                return NULL;
+    }
 
     // 2. Copiar los datos de entrada al array de resultados.
     // Es buena práctica no modificar los datos de entrada ('data').
