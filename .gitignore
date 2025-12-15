@@ -21,11 +21,16 @@ env/
 *.pyc
 __pycache__/
 
-# Binarios de Go (GoLang)
-/bin/
+# Archivos y directorios generados por Go
+# Ignora el ejecutable de Go en la carpeta del servicio
+services/go_crypto_service/go_crypto_service
+
+# Ignora ejecutables generados en la raíz del proyecto
 *.exe
-*.test
-*.prof
+*.bin
+# Ignora archivos de módulos de Go
+/vendor/
+go.sum
 
 # Archivos de logs
 *.log
@@ -38,3 +43,4 @@ yarn-error.log*
 .idea/
 .env
 .local/
+
