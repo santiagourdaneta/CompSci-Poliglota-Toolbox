@@ -38,6 +38,12 @@ get '/' do
   CompSciToolbox::RateLimiter.execute do
     
     # --- LÓGICA POLÍGLOTA DE SERVICIOS (ÉXITO - HTTP 200) ---
+
+    # === PRUEBA DE DEPURACIÓN ===
+        # Verifica si el sistema puede ejecutar Python
+        system_check = `which python3` 
+        puts "DEBUG: La ruta de Python es: #{system_check}" 
+        # === FIN PRUEBA DE DEPURACIÓN ===
     
    # --- DEFINICIÓN DE ENTRADAS ---
     c_plus_input = [5, 2, 8, 1]
