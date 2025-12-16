@@ -7,6 +7,19 @@ import numpy as np
 # Recibe la matriz aplanada como un argumento de cadena separada por comas.
 # Ejemplo de entrada: "4.0,-2.0,1.0,1.0"
 
+# === Codificador JSON para manejar complejos ===
+
+class ComplexEncoder(json.JSONEncoder):
+    """Convierte objetos complejos en un formato serializable por JSON (lista de [real, imag])."""
+    def default(self, obj):
+        if isinstance(obj, complex):
+            # Formato estándar para representar un complejo: [real, imaginario]
+            return [obj.real, obj.imag] 
+        # Deja que la clase base maneje otros tipos
+        return json.JSONEncoder.default(self, obj)
+
+# ==========================================================
+
 
 def calculate_eigenvalues(data_string):
     """
@@ -43,8 +56,7 @@ def calculate_eigenvalues(data_string):
         eigenvalues_list = eigenvalues.tolist()
 
         # === Serializar el resultado a JSON ===
-        # json.dumps convierte la lista de Python en una cadena JSON
-        json_output = json.dumps(eigenvalues_list)
+        json_output = json.dumps(eigenvalues_list, cls=ComplexEncoder) 
 
         # Imprimir SOLO el resultado JSON etiquetado
         print(f"SUCCESS:{json_output}")

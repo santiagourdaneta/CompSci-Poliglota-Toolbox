@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# Ejecutable para iniciar la aplicación web
+
+# 1. Configuración del Entorno
+require 'bundler/setup'
+
+# 2. Carga de los Frameworks/Manejadores (Rack y Puma)
+require 'rack'
+require 'puma'
+
+# 3. Carga de la Aplicación
+require 'sinatra'
+require_relative '../app/app'
+
+# --- INICIO DEL SERVIDOR ---
+Rack::Handler::Puma.run(
+  PoliglotaApp,
+  Port: 4567,
+  Host: '0.0.0.0'
+)
+# ============================

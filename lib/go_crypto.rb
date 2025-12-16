@@ -6,6 +6,7 @@ require 'open3'
 require 'shellwords'
 
 module CompSciToolbox
+
   module Security
     # Módulo que encapsula las operaciones criptográficas del proyecto,
     # utilizando el servicio externo de Go.
@@ -19,7 +20,6 @@ module CompSciToolbox
         # Ruby se encarga del 'escaping' de forma segura sin invocar un shell.
         command_array = [
           GO_SERVICE_PATH, 
-          'ElTokenDePrueba2025!', # Argumento específico de Go para la operación
           data_string # El dato a hashear (el shell de Go lo maneja)
         ]
 

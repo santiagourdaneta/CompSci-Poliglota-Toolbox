@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
-# Carga las dependencias del entorno
-require 'bundler/setup'
+# Cargar el entorno y las dependencias (Bundler)
+require 'bundler'
+Bundler.require
 
-# Carga la aplicación principal (PoliglotaApp)
-require_relative 'app/app'
+# --- Añadir el directorio 'app' a la ruta de búsqueda de Ruby ---
+$LOAD_PATH.unshift(File.expand_path('./app'))
 
-# Monta la aplicación para que Puma/Rack la ejecute
-run PoliglotaApp
+# Cargar tu aplicación Sinatra (app.rb)
+require 'app'
+
+# Ejecutar la aplicación cargada
+run Sinatra::Application

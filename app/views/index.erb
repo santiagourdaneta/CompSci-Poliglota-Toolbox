@@ -35,15 +35,21 @@
         <h1>CompSci Poliglota: Arquitectura de Alto Rendimiento</h1>
 
         <p class="intro-description">El orquestador Ruby integra servicios de código nativo (C++) y cálculo científico (Python) para ejecutar operaciones complejas con la máxima eficiencia.</p>
-        
-        <img src="/assets/hero_image.jpg" alt="Gráfico de datos complejos ilustrando procesamiento de datos." fetchpriority="high">
 
-        <div class="results-card">
-            <h2>📊 Resultados de la Orquestación</h2>
-            <p class="card-description">Salida consolidada del sistema políglota (Ruby, C++ FFI y Python IPC).</p>
-            <pre class="code-output"><%= @data_result %></pre>
-        </div>
-
+        <div class="description-box">
+                <p>
+                    Este proyecto es una aplicación web de <span class="key-concept">Sinatra (Ruby)</span> que orquesta servicios políglotas 
+                    (C++, Python, Go) mediante FFI e IPC. Su objetivo es demostrar una arquitectura robusta capaz de integrar múltiples lenguajes de alto rendimiento.
+                </p>
+                <p>
+                    El punto central es el <span class="key-concept">Rate Limiter multi-hilo</span>, que usa <code>Mutex</code> para limitar estrictamente la concurrencia a los servicios críticos, previniendo el bloqueo del servidor bajo estrés.
+                </p>
+                <hr style="border: none; border-top: 1px dashed #ccc; margin: 15px 0;">
+                        <p>
+                            Este enfoque políglota permite aprovechar el <span class="key-concept">rendimiento nativo</span> de C++ para cálculos intensivos (FFI), la <span class="key-concept">rica librería científica</span> de Python para matrices complejas (IPC), y la <span class="key-concept">velocidad de Go</span> para tareas como el hashing criptográfico (IPC). La orquestación centralizada en Ruby mantiene una API RESTful sencilla. La principal ventaja es la <span class="key-concept">seguridad operativa</span> garantizada por la implementación de Puma, que proporciona concurrencia multi-hilo, eliminando el riesgo de bloqueo de recursos (thread blocking) y garantizando una alta disponibilidad, incluso cuando los servicios externos están saturados o son lentos.
+                        </p>
+            </div>
+       
         <hr style="width: 100%; margin: 2rem 0; border: 0; border-top: 1px solid #ccc;">
 
         <section class="explanation-section">
@@ -75,12 +81,36 @@
                 Este patrón crea una aplicación híbrida que aprovecha la rapidez del desarrollo web de Ruby junto con la potencia matemática de Python, manteniéndolos en procesos separados y comunicados. 
             </p>
         </section>
-        
-        <p>Esta es la prueba de la integración de diferentes lenguajes: Ruby como orquestador, C++ para algoritmos de ordenamiento de alto rendimiento y Python para cálculos matemáticos complejos como los Eigenvalores.</p>
-    </div>
 
+        <section class="explanation-section">
+    <h2>3. 🔐 Ruby y Go: Comunicación de Procesos (IPC y Shell)</h2>
+    <p>
+        Al igual que con Python, la integración entre Ruby y Go se realiza a través de IPC, lo cual es altamente recomendado para lenguajes compilados que pueden realizar tareas concurrentes o de uso intensivo de CPU (como el *hashing* SHA-256). Este método nos permite beneficiarnos de la velocidad y la eficiencia de Go sin depender de extensiones complejas.
+    </p>
+    <p>
+        <strong>¿Cómo funciona?</strong> El orquestador Ruby llama al binario compilado de Go (ej: el ejecutable .exe en Windows o el binario en Linux/macOS) mediante el shell. La cadena de entrada (el dato a hashear) se pasa como un argumento. Go ejecuta el código a su máxima velocidad, calcula el hash, e imprime el resultado final (`SUCCESS:<hash_hex>`) en stdout. Ruby lee esta salida etiquetada y la utiliza. 
+        Este patrón garantiza que la librería Go no necesita ser cargada en el mismo proceso, lo que ofrece una excelente robustez y aislamiento de fallos.
+    </p>
+</section>
+
+ <div class="results-card">
+            <h2>📊 Resultados de la Orquestación</h2>
+            <p class="card-description">Salida consolidada del sistema políglota (Ruby, C++ FFI y Python IPC).</p>
+            <pre class="code-output"><%= @data_result %></pre>
+</div>
+
+ 
+        <img src="/assets/hero_image.jpg" alt="Gráfico de datos complejos ilustrando procesamiento de datos." fetchpriority="high">    
+   
     <footer>
         <p>© 2025 CompSci Toolbox. Todos los derechos reservados.</p>
+        <p>
+        Desarrollado por <strong>Santiago Urdaneta</strong> &copy; <%= Time.now.year %> | 
+        Código Fuente del Proyecto: 
+        <a style="color: white;" href="https://github.com/santiagourdaneta/CompSci-Poliglota-Toolbox" target="_blank" rel="noopener noreferrer">
+            CompSci-Poliglota-Toolbox (GitHub)
+        </a>
+    </p>
     </footer>
     
     <script>
