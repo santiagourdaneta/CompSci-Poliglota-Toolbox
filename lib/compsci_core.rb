@@ -1,91 +1,73 @@
-# frozen_string_literal: true
-
 # lib/compsci_core.rb
-#
-# Wrapper de Ruby para el servicio de Alto Rendimiento escrito en C++.
-# Utiliza FFI (Foreign Function Interface) para cargar la librería dinámica.
 
 require 'ffi'
 
 module CompSciToolbox
-  # Módulo principal que define la conexión con el código C++
+  # Módulo para servicios de Core CompSci (C++ FFI)
   module Core
+    # FFI: Foreign Function Interface
     extend FFI::Library
+    
+    # 1. Determinar el nombre y la ruta del binario basado en la plataforma
+    lib_path = File.expand_path(File.join(__dir__, '..', 'lib'))
+    
+    lib_name = case RUBY_PLATFORM
+               # Linux (Render)
+               when /linux/ then File.join(lib_path, 'libcompsci.so')
+               # Windows (Local)
+               when /mingw|mswin/ then File.join(lib_path, 'libcompsci.dll')
+               else
+                 nil
+               end
 
-    # ------------------------------------------------------------------
-    # 1. Configuración de la Ruta de la Librería
-    # ------------------------------------------------------------------
-
-    # Definir la ruta relativa a la librería compilada de C++.
-    lib_dir = File.expand_path('../services/cpp_fast_algs', __dir__)
-
-    # Array de posibles nombres de archivo para ser multiplataforma
-    LIB_NAMES = [
-      "#{lib_dir}/libcompsci_core.so",    # Linux/Unix
-      "#{lib_dir}/libcompsci_core.dll",   # Windows
-      "#{lib_dir}/libcompsci_core.bundle" # macOS (a veces)
-    ].freeze
-
-    # Intentar cargar la librería
-    begin
-      ffi_lib LIB_NAMES
-    rescue FFI::NotFoundError => e
-      raise "FATAL ERROR: No se encontró la librería C++ de alto rendimiento.\n" \
-            "Asegúrese de haber compilado el código C++ en: #{LIB_NAMES.join(' o ')}.\n" \
-            "Detalles del Error: #{e.message}"
-    end
-
-
-    # ------------------------------------------------------------------
-    # 2. Mapeo de la Función C++ (El Contrato)
-    # ------------------------------------------------------------------
-
-    # Mapear la función C++:
-    # C Function: int* fast_sort_c(int* data, int size);
-    #
-    # Argumentos (Args): [ :pointer (int*), :int (size) ]
-    # Retorno (Returns): :pointer (int*)
-
-    attach_function :fast_sort_c, %i[pointer int], :pointer
-
-
-    # ------------------------------------------------------------------
-    # 3. Wrapper de Ruby (Método Público y Gestión de Memoria)
-    # ------------------------------------------------------------------
-
-    # rubocop:disable Metrics/MethodLength
-    def self.fast_sort(data_array)
-      # Validación de la entrada
-      unless data_array.is_a?(Array) && data_array.all? { |i| i.is_a? Integer }
-        raise ArgumentError, 'El método fast_sort solo acepta un Array de enteros.'
-      end
-
-      size = data_array.size
-
-      # 1. Asignar memoria y escribir los datos de entrada (managed by Ruby)
-      input_pointer = FFI::MemoryPointer.new(:int, size)
-      input_pointer.write_array_of_int(data_array)
-
-      # 2. Llamar a la función C++
-      # C++ retorna un puntero de memoria recién asignada.
-      output_pointer = fast_sort_c(input_pointer, size)
-
-      # 3. Leer la memoria de C++ de vuelta a Ruby
-      sorted_array = output_pointer.read_array_of_int(size)
-
-      # 4. Liberar Memoria (Crucial para evitar fugas)
-      # La responsabilidad de liberar el puntero retornado por malloc en C++ recae en el wrapper de Ruby.
+    # 2. Lógica Condicional de Carga de FFI y Fallback
+    if lib_name && File.exist?(lib_name)
       begin
-        output_pointer.free
-        input_pointer.free
-      rescue StandardError => e
-        # Se incluye un rescate por si la librería C++ retorna un puntero no válido,
-        # aunque un error de 'free' indica un fallo en el contrato de memoria.
-        puts "ADVERTENCIA FFI: Error al liberar memoria. Posiblemente doble free o puntero inválido: #{e.message}"
+        ffi_lib lib_name
+        puts "✅ FFI: Binario C++ cargado exitosamente desde: #{lib_name}"
+
+        # --- DEFINICIÓN DE FUNCIONES FFI (Attach Functions) ---
+        # El método C++ que expone la función de ordenamiento
+        attach_function :fast_sort_c, [:pointer, :int], :void
+        
+        # Wrapper de Ruby para manejar la conversión de tipos
+        def self.fast_sort(arr)
+          return [] if arr.nil? || arr.empty?
+          
+          # Convertir el array de Ruby a un puntero FFI para C++
+          ptr = FFI::MemoryPointer.new(:int, arr.size)
+          ptr.write_array_of_int(arr)
+          
+          # Llamar a la función C++
+          fast_sort_c(ptr, arr.size)
+          
+          # Leer el resultado de vuelta al array de Ruby
+          ptr.read_array_of_int(arr.size)
+        end
+        # ------------------------------------------------------
+
+      rescue FFI::NotFoundError => e
+        puts "❌ ERROR FFI: No se pudo cargar la librería '#{lib_name}'. Error: #{e.message}"
+        
+        # --- FALLBACK DE RUBY ---
+        def self.fast_sort(arr)
+          puts "⚠️ FALLBACK: Usando método Ruby para sortear. FFI C++ no está disponible."
+          arr.sort
+        end
+        # ------------------------
       end
 
-      sorted_array
+    else
+      # Si el archivo del binario no existe (p. ej., no ha sido compilado en la plataforma)
+      puts "⚠️ ADVERTENCIA FFI: Binario C++ no encontrado en la ruta esperada: #{lib_name}. Se usará FALLBACK de Ruby."
+      
+      # --- FALLBACK DE RUBY ---
+      def self.fast_sort(arr)
+        puts "⚠️ FALLBACK: Usando método Ruby para sortear. Binario C++ no encontrado."
+        arr.sort
+      end
+      # ------------------------
     end
-    # rubocop:enable Metrics/MethodLength
+    
   end
 end
