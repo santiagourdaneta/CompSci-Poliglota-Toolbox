@@ -35,7 +35,7 @@ set :public_folder, Proc.new { File.join(root, "public") }
 # -----------------------------------------------------------------
 # Esta directiva es la SOLUCIÓN: Captura la excepción RateLimitExceeded
 # donde sea que se lance en la app y garantiza una respuesta 503.
-error RateLimitExceeded do
+error CompSciToolbox::RateLimitExceeded do
   # El método 'status' y 'halt' de Sinatra están implícitos aquí.
   status 503
   'Error 503: Service Unavailable. El servidor está bajo carga máxima y te ha rechazado intencionalmente.'
@@ -89,13 +89,10 @@ get '/' do
 
     erb :index
   end
-  # Si el Rate Limiter lanza la excepción, el código NUNCA llega aquí,
-  # y en su lugar, la directiva 'error' (arriba) se activa.
-end
-rescue => e
-    # Manejo de otros errores no relacionados con el rate limit
-    puts "Error inesperado en la ruta: #{e.message}"
-    # Si es otro tipo de error, Sinatra devolverá el 500 por defecto
-    raise e 
+  rescue => e
+      puts "Error inesperado en la ruta: #{e.message}"
+      status 500
+      "Error interno del servidor: #{e.message}"
+    end
 end
 
