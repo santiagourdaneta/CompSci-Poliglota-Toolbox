@@ -2,10 +2,11 @@
 
 require 'thread'
 
-# 1. Clase de excepción pública: Usada para señalar a Sinatra que devuelva 503
-class RateLimitExceeded < StandardError; end 
-
 module CompSciToolbox
+
+  # 1. Clase de excepción pública: Usada para señalar a Sinatra que devuelva 503
+  class RateLimitExceeded < StandardError; end 
+  
   class RateLimiter
     # Límite de ejecución concurrente. Mantenemos la constante pero no la usamos.
     MAX_CONCURRENT = 100 
