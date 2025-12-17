@@ -14,15 +14,30 @@ module CompSciToolbox
     @@mutex = Mutex.new
 
     def self.execute
-      # ------------------------------------------------------------------
-      # !!! TEMPORALMENTE DESACTIVADO PARA DEPURAR SERVICIOS IPC EN RENDER !!!
-      # El código original de limitación de concurrencia está siendo omitido
-      # para evitar que el Health Check de Render cause la excepción 500.
-      # ------------------------------------------------------------------
-      
-      # Solo ejecutamos el bloque y retornamos el resultado, bypassando la limitación.
+      @@mutex.synchronize do
+        if @@current_count >= MAX_CONCURRENT
+          # Lanza la excepción que Sinatra interceptará
+          raise RateLimitExceeded, "El límite concurrente ha sido alcanzado." 
+        end
+        @@current_count += 1
+      end
+
+      # Ejecución del bloque envuelto
       result = yield 
+
+      # Liberar el recurso
+      @@mutex.synchronize do
+        @@current_count -= 1
+      end
+      
       result
+    rescue
+      # Si ocurre algún error DENTRO del bloque, debemos liberar el contador
+      @@mutex.synchronize do
+        @@current_count -= 1
+      end
+      # Volver a lanzar la excepción para que sea manejada por Sinatra
+      raise
     end
   end
 end

@@ -6,6 +6,17 @@ require_relative '../lib/go_crypto'
 require_relative '../lib/webarch/middleware/rate_limiter'
 require './lib/rate_limiter'
 
+# Configuración del error
+error CompSciToolbox::RateLimitExceeded do
+  # 1. Establecer el código de estado HTTP a 503
+  status 503 
+  
+  # 2. Devolver un mensaje claro al cliente
+  "Error: Límite de Frecuencia Excedido (Rate Limit Exceeded). Por favor, espera antes de reintentar."
+end
+
+
+
 # -----------------------------------------------------------------
 # CONFIGURACIÓN SINATRA: Definir Rutas de Vistas y Estáticos
 # -----------------------------------------------------------------
@@ -34,6 +45,9 @@ end
 # 2. RUTA PRINCIPAL
 # -----------------------------------------------------------------
 get '/' do
+
+  # Aquí llamas al método que tiene el control de límite
+    begin
   # El Rate Limiter envuelve todo el procesamiento políglota
   CompSciToolbox::RateLimiter.execute do
     
@@ -77,5 +91,11 @@ get '/' do
   end
   # Si el Rate Limiter lanza la excepción, el código NUNCA llega aquí,
   # y en su lugar, la directiva 'error' (arriba) se activa.
+end
+rescue => e
+    # Manejo de otros errores no relacionados con el rate limit
+    puts "Error inesperado en la ruta: #{e.message}"
+    # Si es otro tipo de error, Sinatra devolverá el 500 por defecto
+    raise e 
 end
 
