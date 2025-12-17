@@ -4,7 +4,7 @@ require_relative '../lib/compsci_core'
 require_relative '../lib/math_calculator'
 require_relative '../lib/go_crypto'
 require_relative '../lib/webarch/middleware/rate_limiter'
-require_relative './lib/rate_limiter'
+require_relative '../lib/rate_limiter'
 
 # Configuración del error
 error CompSciToolbox::RateLimitExceeded do
